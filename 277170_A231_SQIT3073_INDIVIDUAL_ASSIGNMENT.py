@@ -1,10 +1,7 @@
 # A231 SQIT3073 INDIVIDUAL ASSIGNMENT (HOUSING LOAN ELIGIBILITY AND DSR CALCULATOR)
 
 import os 
-# Windows 
-os.system('cls')
-# Mac
-# os.system('clear')
+os.system('cls' if os.name == 'nt' else 'clear')
 
 # Initialize an empty list to store loan calculations
 loan_calculations = []
@@ -142,7 +139,7 @@ def main():
             delete_previous_calculation()
         #If choose Option 4
         elif option == '4':
-            print("Logging out program. Thank you for using this program!")
+            print("\nLogging out program. Thank you for using this program!")
             break
         else:
             print("Invalid option. Please enter 1, 2, 3, or 4.")
