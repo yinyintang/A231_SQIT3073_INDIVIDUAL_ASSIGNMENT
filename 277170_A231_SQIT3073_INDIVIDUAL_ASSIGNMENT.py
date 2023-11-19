@@ -1,6 +1,7 @@
 # A231 SQIT3073 INDIVIDUAL ASSIGNMENT (HOUSING LOAN ELIGIBILITY AND DSR CALCULATOR)
 
 import os 
+# Clear the console screen
 os.system('cls' if os.name == 'nt' else 'clear')
 
 # Initialize an empty list to store loan calculations
@@ -9,9 +10,33 @@ loan_calculations = []
 # User credentials for login system
 user_credentials = {"user_id": "sqit3073", "password": "1234"}
 
+# File to store loan calculations
+file_path = "housing_loan_calculations.txt"
+
+# Function to save loan calculations to a file
+def save_calculations_to_file():
+    with open(file_path, "w") as file:
+        for calculation in loan_calculations:
+            file.write(str(calculation) + "\n")
+
+# Function to load loan calculations from a file
+def load_calculations_from_file():
+    if os.path.exists(file_path):
+        with open(file_path, "r") as file:
+            lines = file.readlines()
+            for line in lines:
+                try:
+                    calculation = eval(line.strip())
+                    loan_calculations.append(calculation)
+                except Exception as e:
+                    print(f"Error loading calculation: {e}")
+
 # Login system
 def login():
-    while True:
+    # Function to handle user login
+    max_attempts = 3
+    attempts = 0
+    while attempts < max_attempts:
         print("User Login:")
         user_id = input("Please enter your user ID: ")
         password = input("Please enter your password: ")
@@ -21,41 +46,88 @@ def login():
             break
         else:
             print("\nInvalid username or password. Please try again!")
+            attempts += 1
 
+    if attempts == max_attempts:
+        print("\nToo many unsuccessful login attempts. Exiting program.")
+        exit()
 
-# Calculate New Loan
+# Function to get numeric input with validation
+def get_numeric_input(prompt):
+    while True:
+        try:
+            value = float(input(prompt))
+            return value
+        except ValueError:
+            print("\nError: Invalid input. Please enter a valid numeric value.")
+
+# Option 1: Calculate New Loan
 def calculate_new_loan():
     print("\nPlease enter loan details:")
      
     # User's principal loan amount
-    principal_loan_amount = float(input("Principal loan amount (RM): "))
-        
-    # User's annual interest rate
-    annual_interest_rate = float(input("Annual interest rate (%): "))
-       
-    # User's loan term in years
-    loan_term_years = int(input("Loan term in years: "))
-        
-    # User's monthly income
-    monthly_income = float(input("Applicant's monthly income (RM): "))
-       
-    # User's other monthly financial commitments
-    other_commitments = float(input("Other monthly financial commitments (RM): "))
+    while True:
+        principal_loan_amount = get_numeric_input("Principal loan amount (RM): ")
+        if principal_loan_amount >= 0:
+            break
+        else:
+            print("\nError: Principal loan amount cannot be negative. Please enter a valid amount.")
 
+    # User's annual interest rate
+    while True:
+        annual_interest_rate = get_numeric_input("Annual interest rate (%): ")
+        if 0 <= annual_interest_rate <= 10:
+            break
+        else:
+            print("\nError: Annual interest rate should be between 0 and 10 (in %). Please enter a valid rate.")    
     
+    # User's loan term in years
+    while True:
+        try:
+            loan_term_years = int(input("Loan term in years: "))
+            if loan_term_years > 0:
+                break
+            else:
+                print("\nError: Loan term should be a positive integer. Please enter a valid term.")
+        except ValueError:
+            print("\nError: Invalid input. Please enter a valid integer for the loan term.")
+   
+    # User's monthly income
+    while True:
+        monthly_income = get_numeric_input("Applicant's monthly income (RM): ")
+        if monthly_income >= 0:
+            break
+        else:
+            print("\nError: Monthly income cannot be negative. Please enter a valid amount.")
+
+    # User's other monthly financial commitments
+    while True:
+        other_commitments = get_numeric_input("Other monthly financial commitments (RM): ")
+        if other_commitments >= 0:
+            break
+        else:
+            print("\nError: Other monthly commitments cannot be negative. Please enter a valid amount.")
+
     # Calculate loan details
+    try:
+        if loan_term_years == 0:
+            raise ValueError("\nError: Loan term is zero. Please enter a valid loan term.")   
         
-    # Function to calculate monthly installment for housing loan details
-    monthly_interest_rate = (annual_interest_rate / 100) / 12
-    num_payments = loan_term_years * 12
-    monthly_installment = (principal_loan_amount * monthly_interest_rate) / (1 - (1 + monthly_interest_rate) ** - num_payments)
-       
-    # Function to calculate total amount payable over the term of the loan
-    total_amount_payable = monthly_installment * loan_term_years * 12
-       
-    # Function to calculate the Debt Service Ratio (DSR)
-    total_commitments = other_commitments + monthly_installment
-    dsr = (total_commitments / monthly_income) * 100
+        # Function to calculate monthly installment for housing loan details
+        monthly_interest_rate = (annual_interest_rate / 100) / 12
+        num_payments = loan_term_years * 12
+        monthly_installment = (principal_loan_amount * monthly_interest_rate) / (1 - (1 + monthly_interest_rate) ** - num_payments)
+            
+        # Function to calculate total amount payable over the term of the loan
+        total_amount_payable = monthly_installment * loan_term_years * 12
+            
+        # Function to calculate the Debt Service Ratio (DSR)
+        total_commitments = other_commitments + monthly_installment
+        dsr = (total_commitments / monthly_income) * 100
+    except ValueError as ve:
+        print(ve)
+        return
+    
 
     # Display housing loan details
     print("\nLoan Details:")
@@ -64,7 +136,7 @@ def calculate_new_loan():
     print(f"Debt Service Ratio (DSR): {dsr:.2f}%")
 
     # Assume the threshold for DSR is 70%.
-    # Check eligibility
+    # If the calculated DSR is below this threshold, the user is considered eligible for the housing loan.
     if dsr <= 70:
         print("\nCongratulations! You are eligible for the loan.")
     else:
@@ -82,7 +154,7 @@ def calculate_new_loan():
     })
 
 
-# Display Previous Loan Calculations
+# Option 2: Display Previous Loan Calculations
 def display_previous_calculations():
     # If user's do not have previous loan calculations
     if not loan_calculations:
@@ -98,22 +170,30 @@ def display_previous_calculations():
             print(f"DSR: {calculation['DSR']:.2f}%")
 
 
-# Delete Previous Calculation
+# Option 3: Delete Previous Calculation
 def delete_previous_calculation():
-    # If user's do not have previous loan to delete
-    if not loan_calculations:
-        print("\nNo previous loan calculations to delete.")
-    else:
-        index_to_delete = int(input("\nPlease enter the index of the calculation to delete: ")) - 1
-        if 0 <= index_to_delete < len(loan_calculations):
-            deleted_calculation = loan_calculations.pop(index_to_delete)
-            print(f"Calculation {index_to_delete + 1} successfully deleted.")
+    try: 
+        # If user's do not have previous loan to delete
+        if not loan_calculations:
+            print("\nNo previous loan calculations to delete.")
         else:
-            print("Invalid input. Please enter a valid index.")
-
+            try:
+                index_to_delete = int(input("\nPlease enter the index of the calculation to delete: ")) - 1
+            except ValueError:
+                print("\nInvalid input. Please enter a valid integer.")
+                return
+                
+            if 0 <= index_to_delete < len(loan_calculations):
+                deleted_calculation = loan_calculations.pop(index_to_delete)
+                print(f"Calculation {index_to_delete + 1} successfully deleted.")
+            else:
+                print("\nError: Invalid input. Please enter a valid index.")
+    except Exception as e:
+        print(f"\nAn unexpected error occurred: {e}")
 
 # Main loop for the system
 def main():
+    load_calculations_from_file()
     login()
 
     while True:
@@ -139,10 +219,11 @@ def main():
             delete_previous_calculation()
         #If choose Option 4
         elif option == '4':
+            save_calculations_to_file()
             print("\nLogging out program. Thank you for using this program!")
             break
         else:
-            print("Invalid option. Please enter 1, 2, 3, or 4.")
+            print("\nError: Invalid option. Please enter 1, 2, 3, or 4.")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,2 @@
+{'Principal': 30000.0, 'Interest Rate': 5.0, 'Loan Term': 30000, 'Monthly Income': 2000.0, 'Monthly Installment': 125.0, 'Total Amount Payable': 45000000.0, 'DSR': 56.25}
+{'Principal': 500000.0, 'Interest Rate': 3.0, 'Loan Term': 500000, 'Monthly Income': 2.0, 'Monthly Installment': 1250.0, 'Total Amount Payable': 7500000000.0, 'DSR': 62700.0}
