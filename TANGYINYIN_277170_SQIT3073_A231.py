@@ -210,16 +210,16 @@ def main():
         # User's options
         option = input("\nPlease enter your option (1/2/3/4): ")
 
-        #If user's choose Option 1
+        #If choose Option 1
         if option == '1':
             calculate_new_loan()
-        #If user's choose Option 2
+        #If choose Option 2
         elif option == '2':
             display_previous_calculations()
-        #If user's choose Option 3
+        #If choose Option 3
         elif option == '3':
             delete_previous_calculation()
-        #If user's choose Option 4
+        #If choose Option 4
         elif option == '4':
             save_calculations_to_file()
             print("\nLogging out program. Thank you for using this program!")
