@@ -1,8 +1,17 @@
 # A231 SQIT3073 INDIVIDUAL ASSIGNMENT (HOUSING LOAN ELIGIBILITY AND DSR CALCULATOR)
 
 import os 
-# Clear the console screen
-os.system('cls' if os.name == 'nt' else 'clear')
+
+try:
+    # Attempt to clear the screen for Windows
+    os.system('cls')
+except:
+    try:
+        # Attempt to clear the screen for macOS if the first try fails
+        os.system('clear')
+    except:
+        # Output an error message if both attempts fail
+        print("Unable to clear the screen.")
 
 # Initialize an empty list to store loan calculations
 loan_calculations = []
