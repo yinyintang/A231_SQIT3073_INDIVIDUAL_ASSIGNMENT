@@ -34,6 +34,7 @@ def load_calculations_from_file():
 # Login system
 def login():
     # Function to handle user login
+    # All users have 3 login attempts
     max_attempts = 3
     attempts = 0
     while attempts < max_attempts:
@@ -47,7 +48,8 @@ def login():
         else:
             print("\nInvalid username or password. Please try again!")
             attempts += 1
-
+    
+    # If user's try all three attempts
     if attempts == max_attempts:
         print("\nToo many unsuccessful login attempts. Exiting program.")
         exit()
