@@ -1,0 +1,3 @@
+{'Principal': 3000.0, 'Interest Rate': 5.0, 'Loan Term': 30, 'Monthly Income': 1300.0, 'Monthly Installment': 16.104648690364197, 'Total Amount Payable': 5797.673528531111, 'DSR': 47.392665283874166}
+{'Principal': 6000.0, 'Interest Rate': 3.0, 'Loan Term': 6, 'Monthly Income': 6.0, 'Monthly Installment': 91.16205491663419, 'Total Amount Payable': 6563.667953997661, 'DSR': 1569.3675819439031}
+{'Principal': 500.0, 'Interest Rate': 1.0, 'Loan Term': 3445, 'Monthly Income': 3.0, 'Monthly Installment': 0.41666666666666713, 'Total Amount Payable': 17225.000000000022, 'DSR': 113.8888888888889}
