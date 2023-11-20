@@ -16,6 +16,9 @@ except:
 # Initialize an empty list to store loan calculations
 loan_calculations = []
 
+# Set the DSR threshold
+dsr_threshold = 70
+
 # User credentials for login system
 user_credentials = {"user_id": "sqit3073", "password": "1234"}
 
@@ -47,7 +50,7 @@ def login():
     max_attempts = 3
     attempts = 0
     while attempts < max_attempts:
-        print("User Login:")
+        print("\nUser Login:")
         user_id = input("Please enter your user ID: ")
         password = input("Please enter your password: ")
 
@@ -57,10 +60,10 @@ def login():
         else:
             print("\nInvalid username or password. Please try again!")
             attempts += 1
-    
+ 
     # If user's try all three attempts
     if attempts == max_attempts:
-        print("\nToo many unsuccessful login attempts. Exiting program.")
+        print("\nYou have reached maximum login attempts. Exiting program.")
         exit()
 
 # Function to get numeric input with validation
@@ -75,7 +78,8 @@ def get_numeric_input(prompt):
 # Option 1: Calculate New Loan
 def calculate_new_loan():
     print("\nPlease enter loan details:")
-     
+    
+    # Get user's loan details
     # User's principal loan amount
     while True:
         principal_loan_amount = get_numeric_input("Principal loan amount (RM): ")
@@ -146,9 +150,10 @@ def calculate_new_loan():
     print(f"Total Amount Payable: RM{total_amount_payable:.2f}")
     print(f"Debt Service Ratio (DSR): {dsr:.2f}%")
 
+    # Check eligibility based on DSR
     # Assume the threshold for DSR is 70%.
     # If the calculated DSR is below this threshold, the user is considered eligible for the housing loan.
-    if dsr <= 70:
+    if dsr <= dsr_threshold:
         print("\nCongratulations! You are eligible for the loan.")
     else:
         print("\nSorry, you are not eligible for the loan.")
@@ -196,11 +201,33 @@ def delete_previous_calculation():
                 
             if 0 <= index_to_delete < len(loan_calculations):
                 deleted_calculation = loan_calculations.pop(index_to_delete)
-                print(f"Calculation {index_to_delete + 1} successfully deleted.")
+                print(f"\nCalculation {index_to_delete + 1} successfully deleted.")
             else:
                 print("\nError: Invalid input. Please enter a valid index.")
     except Exception as e:
         print(f"\nAn unexpected error occurred: {e}")
+
+# Option 4: Modify the DSR threshold
+def modify_dsr_threshold():
+    try:
+        # Modify DSR Threshold between 0 and 100
+        modified_dsr = float(input("Please enter the new DSR threshold: "))
+
+        # Check if the entered DSR threshold is valid
+        if 0 <= modified_dsr <= 100:
+            # Recalculate DSR
+            # Check eligibility based on the modified threshold
+            if 0 < dsr_threshold < 100 and dsr_threshold <= modified_dsr:
+                print(f"\nCongratulations! You are eligible to apply for a housing loan with a DSR of {dsr_threshold:.2f}%.")
+            else:
+                print(f"\nSorry, your DSR of {dsr_threshold:.2f}% does not meet the eligibility criteria for a housing loan.")
+
+            print(f"\nDSR threshold successfully modified to {modified_dsr:.2f}%.")
+        else:
+            print("\nInvalid DSR threshold. Please enter a value between 0 and 100.")
+    except ValueError:
+        print("\nInvalid input. Please enter a valid numeric value for the DSR threshold.")
+
 
 # Main loop for the system
 def main():
@@ -210,14 +237,15 @@ def main():
     while True:
         print("\nPlease choose one of the options below:")
         # Display menu options for users to choose
-        # Four options available for the users to choose from as shown in below
+        # Five options available for the users to choose from as shown in below
         print("1. Calculate New Housing Loan")
         print("2. Display Previous Loan Calculations")
         print("3. Delete Previous Calculations")
-        print("4. Exit the program")
+        print("4. Modify DSR Threshold")
+        print("5. Exit the program")
 
         # User's options
-        option = input("\nPlease enter your option (1/2/3/4): ")
+        option = input("\nPlease enter your option (1/2/3/4/5): ")
 
         #If choose Option 1
         if option == '1':
@@ -230,11 +258,14 @@ def main():
             delete_previous_calculation()
         #If choose Option 4
         elif option == '4':
+            modify_dsr_threshold()
+        #If choose Option 5
+        elif option == '5':
             save_calculations_to_file()
             print("\nLogging out program. Thank you for using this program!")
             break
         else:
-            print("\nError: Invalid option. Please enter 1, 2, 3, or 4.")
+            print("\nError: Invalid option. Please enter 1, 2, 3, 4 or 5.")
 
 
 if __name__ == "__main__":
